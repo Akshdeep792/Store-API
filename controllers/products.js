@@ -1,9 +1,26 @@
+const Product = require("../models/product");
+
 const getAllproductStatic = async (req,res) => {
-    res.status(201).json({msg : "Product testing route"})
+    const products = await Product.find({name : 'albany sectional'})
+    // throw new Error("Express async error")
+    res.status(201).json({products, nbHits : products.length})
 }
 
 const getAllproduct = async (req,res) => {
-    res.status(201).json({msg : "Product route"})
+    const {featured, company , name} = req.query
+    let queryObject = {}
+    if(featured){
+        queryObject.featured = featured === 'true' ? true : false
+    }
+    if(company){
+        queryObject.company = company
+    }
+    if(name){
+        queryObject.name = name
+    }
+    console.log(queryObject);
+    const products = await Product.find(queryObject);
+    res.status(201).json({products, nbHits : products.length})
 }
 
 module.exports = {
